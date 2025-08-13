@@ -4,8 +4,8 @@
 # KV files separate UI design from Python logic for cleaner code organization.
 
 # Import custom widget classes from Python modules
-#:import track track                           # Import TrackWidget class
-#:import play_indicator play_indicator         # Import PlayIndicatorWidget class
+#:import track track
+#:import play_indicator play_indicator
 
 # Set the root widget - this connects to MainWidget class in main.py
 MainWidget:
@@ -153,32 +153,3 @@ MainWidget:
                         size_hint_min_y: dp(75)*root.nb_tracks
                         id: tracks_layout       # ID for Python reference (tracks are added here)
                         orientation: "vertical"  # Stack tracks vertically
-
-# ===== KEY CONCEPTS EXPLAINED =====
-#
-# 1. PROPERTY BINDING:
-#    - root.bpm: Refers to the 'bpm' property in MainWidget Python class
-#    - Changes in Python automatically update the UI
-#
-# 2. SIZING SYSTEM:
-#    - size_hint: Proportional sizing (0.0 to 1.0)
-#    - size_hint: None + explicit size: Fixed sizing
-#    - dp(): Density-independent pixels (scales with screen density)
-#
-# 3. LAYOUT HIERARCHY:
-#    BoxLayout: Linear stacking (horizontal/vertical)
-#    RelativeLayout: Absolute positioning with anchors
-#    Widget: Basic spacing/container element
-#
-# 4. EVENT HANDLING:
-#    - on_press: Executes when button is pressed
-#    - root.method_name(): Calls method in MainWidget Python class
-#
-# 5. DYNAMIC CONTENT:
-#    - tracks_layout: Container populated by Python code
-#    - nb_tracks: Property that determines scroll area size
-#
-# 6. VISUAL EFFECTS:
-#    - LCD display: Layered labels (shadow + main text)
-#    - Button states: Different images for normal/pressed
-#    - Background images: Stretched to fill containers
