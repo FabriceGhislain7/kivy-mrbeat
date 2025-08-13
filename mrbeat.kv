@@ -1,104 +1,184 @@
-#:import track track
-#:import play_indicator play_indicator
+# Kivy UI Definition File for MrBeat Drum Machine
+# ================================================
+# This file defines the user interface layout using Kivy's KV language.
+# KV files separate UI design from Python logic for cleaner code organization.
 
+# Import custom widget classes from Python modules
+#:import track track                           # Import TrackWidget class
+#:import play_indicator play_indicator         # Import PlayIndicatorWidget class
+
+# Set the root widget - this connects to MainWidget class in main.py
 MainWidget:
 
+# Define vertical spacing widget for clean layout separation
 <VerticalSpacingWidget>:
-    size_hint_y: 0.01
+    size_hint_y: 0.01                         # Takes 1% of parent height (small spacing)
 
+# Define reusable button template for control buttons
 <ControlButton@Button>:
+    # Inherits from Button but can be customized
+    # @ symbol creates a template/class rule that can be reused
 
+# Main widget layout definition
 <MainWidget>:
-    tracks_layout: tracks_layout
-    play_indicator_widget: play_indicator_widget
-    BoxLayout:
-        orientation: "vertical"
+    # Property bindings - connect UI elements to Python code
+    tracks_layout: tracks_layout               # Reference to tracks container
+    play_indicator_widget: play_indicator_widget  # Reference to step indicator
 
-        # top layout
-        RelativeLayout:
-            size_hint_y: None
-            height: dp(60)
+    # Main container - vertical layout splits screen into top and bottom sections
+    BoxLayout:
+        orientation: "vertical"               # Stack children vertically
+        
+        # ===== TOP SECTION - Control Panel =====
+        RelativeLayout:                       # Allows absolute positioning of children
+            size_hint_y: None                # Don't resize with parent height
+            height: dp(60)                   # Fixed height of 60 density-independent pixels
+            
+            # Background image for top panel
             Image:
                 source: "images/top_background.png"
-                allow_stretch: True
-                keep_ratio: False
+                allow_stretch: True          # Allow image distortion
+                keep_ratio: False           # Don't maintain aspect ratio (fills space)
+            
+            # Logo image positioned on the left
             Image:
                 source: "images/logo.png"
-                width: dp(230)
-                size_hint_x: None
-                allow_stretch: True
-
+                width: dp(230)              # Fixed width
+                size_hint_x: None           # Don't resize with parent width
+                allow_stretch: True         # Scale image to fit
+            
+            # Center control buttons (Play/Stop)
             BoxLayout:
-                pos_hint: { "center_x" : .5}
-                width: dp(165)
-                size_hint_x: None
+                pos_hint: { "center_x" : .5}  # Center horizontally (50% from left)
+                width: dp(165)                # Fixed width for button group
+                size_hint_x: None             # Don't resize with parent
+                
+                # Play button
                 ControlButton:
-                    on_press: root.on_play_button_pressed()
-                    background_normal: "images/play_button_normal.png"
-                    background_down: "images/play_button_down.png"
+                    on_press: root.on_play_button_pressed()  # Call Python method when pressed
+                    background_normal: "images/play_button_normal.png"    # Default appearance
+                    background_down: "images/play_button_down.png"        # Pressed appearance
+                
+                # Stop button
                 ControlButton:
-                    on_press: root.on_stop_button_pressed()
-                    background_normal: "images/stop_button_normal.png"
-                    background_down: "images/stop_button_down.png"
+                    on_press: root.on_stop_button_pressed()  # Call Python method when pressed
+                    background_normal: "images/stop_button_normal.png"    # Default appearance
+                    background_down: "images/stop_button_down.png"        # Pressed appearance
+            
+            # Right side - BPM controls
             BoxLayout:
-                width: dp(180)
-                size_hint_x: None
-                pos_hint: { "right" : 1}
+                width: dp(180)                # Fixed width for BPM section
+                size_hint_x: None             # Don't resize with parent
+                pos_hint: { "right" : 1}      # Align to right edge (100% from left)
+                
+                # Decrease BPM button (-)
                 ControlButton:
-                    size_hint_x: None
-                    width: dp(32)
-                    on_press: root.bpm -= 5
+                    size_hint_x: None          # Fixed width
+                    width: dp(32)              # Button width
+                    on_press: root.bpm -= 5    # Decrease BPM by 5 when pressed
                     background_normal: "images/minus_button_normal.png"
                     background_down: "images/minus_button_down.png"
+                
+                # BPM display area (LCD-style)
                 RelativeLayout:
+                    # Background for LCD display
                     Image:
                         source: "images/bpm_lcd_background.png"
-                        allow_stretch: True
-                        keep_ratio: False
+                        allow_stretch: True    # Fill the container
+                        keep_ratio: False     # Don't maintain aspect ratio
+                    
+                    # Shadow/template text showing "888" (creates LCD depth effect)
                     Label:
-                        pos: -dp(4), dp(2)
-                        text: "888"
-                        font_name: "fonts/Lcd.ttf"
-                        font_size: dp(36)
-                        opacity: .1
-                        color: 0, 1, 1, 1
+                        pos: -dp(4), dp(2)    # Slight offset for shadow effect
+                        text: "888"           # Template text (shows all possible digits)
+                        font_name: "fonts/Lcd.ttf"  # LCD-style font
+                        font_size: dp(36)     # Large font size
+                        opacity: .1           # Very transparent (10% opacity)
+                        color: 0, 1, 1, 1     # Cyan color (R, G, B, Alpha)
+                    
+                    # Actual BPM value display
                     Label:
-                        pos: -dp(4), dp(2)
-                        text: '{:0>3}'.format(str(root.bpm))
-                        font_name: "fonts/Lcd.ttf"
-                        font_size: dp(36)
-                        color: 0, 1, 1, 1
+                        pos: -dp(4), dp(2)    # Same position as shadow
+                        text: '{:0>3}'.format(str(root.bpm))  # Format BPM as 3-digit string (e.g., "120")
+                        font_name: "fonts/Lcd.ttf"  # Same LCD font
+                        font_size: dp(36)     # Same size as shadow
+                        color: 0, 1, 1, 1     # Solid cyan color
+                
+                # Increase BPM button (+)
                 ControlButton:
-                    size_hint_x: None
-                    width: dp(32)
-                    on_press: root.bpm += 5
+                    size_hint_x: None          # Fixed width
+                    width: dp(32)              # Button width
+                    on_press: root.bpm += 5    # Increase BPM by 5 when pressed
                     background_normal: "images/plus_button_normal.png"
                     background_down: "images/plus_button_down.png"
+                
+                # Spacer widget to add margin on the right
                 Widget:
-                    size_hint_x: None
-                    width: dp(20)
-
-        # bottom layout
-        RelativeLayout:
+                    size_hint_x: None          # Fixed width
+                    width: dp(20)              # 20px margin
+        
+        # ===== BOTTOM SECTION - Drum Tracks =====
+        RelativeLayout:                        # Main tracks area
+            # Background image for tracks area
             Image:
                 source: "images/background.jpg"
-                allow_stretch: True
-                keep_ratio: False
+                allow_stretch: True           # Fill entire area
+                keep_ratio: False            # Don't maintain aspect ratio
+            
+            # Main content area with padding
             BoxLayout:
-                x: dp(16)
-                y: dp(16)
-                size_hint: None, None
+                x: dp(16)                    # Left margin
+                y: dp(16)                    # Bottom margin
+                size_hint: None, None        # Use explicit size instead of hints
+                # Size calculation: parent size minus margins on both sides
                 size: (self.parent.width-dp(32), self.parent.height-dp(32))
-                orientation: "vertical"
+                orientation: "vertical"       # Stack children vertically
+                
+                # Step indicator widget (shows current playing step)
                 PlayIndicatorWidget:
-                    id: play_indicator_widget
-                    size_hint_y: None
-                    height: dp(8)
-                    left_align: root.TRACK_STEPS_LEFT_ALIGN
+                    id: play_indicator_widget  # ID for Python reference
+                    size_hint_y: None          # Fixed height
+                    height: dp(8)              # Thin horizontal bar
+                    left_align: root.TRACK_STEPS_LEFT_ALIGN  # Align with track steps
+                
+                # Scrollable area for tracks (allows many tracks without overflow)
                 ScrollView:
-                    do_scroll_x: False
-                    do_scroll_y: True
+                    do_scroll_x: False         # No horizontal scrolling
+                    do_scroll_y: True          # Allow vertical scrolling
+                    
+                    # Container for all track widgets
                     BoxLayout:
+                        # Minimum height calculation: 75px per track
+                        # This ensures scroll area is big enough for all tracks
                         size_hint_min_y: dp(75)*root.nb_tracks
-                        id: tracks_layout
-                        orientation: "vertical"
+                        id: tracks_layout       # ID for Python reference (tracks are added here)
+                        orientation: "vertical"  # Stack tracks vertically
+
+# ===== KEY CONCEPTS EXPLAINED =====
+#
+# 1. PROPERTY BINDING:
+#    - root.bpm: Refers to the 'bpm' property in MainWidget Python class
+#    - Changes in Python automatically update the UI
+#
+# 2. SIZING SYSTEM:
+#    - size_hint: Proportional sizing (0.0 to 1.0)
+#    - size_hint: None + explicit size: Fixed sizing
+#    - dp(): Density-independent pixels (scales with screen density)
+#
+# 3. LAYOUT HIERARCHY:
+#    BoxLayout: Linear stacking (horizontal/vertical)
+#    RelativeLayout: Absolute positioning with anchors
+#    Widget: Basic spacing/container element
+#
+# 4. EVENT HANDLING:
+#    - on_press: Executes when button is pressed
+#    - root.method_name(): Calls method in MainWidget Python class
+#
+# 5. DYNAMIC CONTENT:
+#    - tracks_layout: Container populated by Python code
+#    - nb_tracks: Property that determines scroll area size
+#
+# 6. VISUAL EFFECTS:
+#    - LCD display: Layered labels (shadow + main text)
+#    - Button states: Different images for normal/pressed
+#    - Background images: Stretched to fill containers

@@ -1,17 +1,104 @@
+# Track Widget Definitions for MrBeat Drum Machine
+# ================================================
+# This KV file defines the visual styling and layout for individual drum tracks
+# in the MrBeat interface. Each track consists of a sound trigger button and
+# a series of step buttons for pattern programming.
 
+# The track system is the core of the drum machine UI, allowing users to:
+# - Trigger individual drum sounds manually
+# - Program step-based patterns for automated playback
+# - Visualize and edit rhythm patterns in real-time
+
+# ===== TRACK SOUND BUTTON STYLING =====
+# This defines the main button that triggers the drum sound for this track
 <TrackSoundButton>:
-    background_normal: "images/sound_button_normal.png"
-    background_down: "images/sound_button_down.png"
-    bold: True
-    font_size: dp(16)
+    # Button background images for different states
+    background_normal: "images/sound_button_normal.png"    # Default appearance
+    background_down: "images/sound_button_down.png"        # When pressed/clicked
+    
+    # Text styling for the button label (e.g., "KICK", "SNARE", "CLAP")
+    bold: True                                             # Make text bold for visibility
+    font_size: dp(16)                                      # Font size in density-independent pixels
 
+# FUNCTIONALITY EXPLANATION:
+# - When pressed, triggers immediate playback of the associated drum sound
+# - Displays the name of the drum sound (from Sound.displayname)
+# - Provides tactile feedback through visual state changes
+# - Acts as both a trigger and a label for the track
+
+# ===== TRACK STEP BUTTON STYLING =====
+# These define the individual step buttons used for pattern programming
 <TrackStepButton>:
-    background_normal: "images/step_normal1.png"
-    background_down: "images/step_down.png"
+    # Button background images for step states
+    background_normal: "images/step_normal1.png"           # Inactive step (off)
+    background_down: "images/step_down.png"                # Active step (on)
 
+# FUNCTIONALITY EXPLANATION:
+# - Each button represents one step in the sequence (typically 16 steps total)
+# - Toggle behavior: click to activate/deactivate step
+# - Active steps trigger the drum sound when the sequencer reaches that position
+# - Visual feedback shows which steps are programmed vs. empty
+# - Allows complex rhythm pattern creation through step-based programming
 
+# STEP PROGRAMMING CONCEPT:
+# Example 16-step pattern for a kick drum:
+# [1][0][0][0][1][0][0][0][1][0][0][0][1][0][0][0]
+#  ^           ^           ^           ^
+#  |           |           |           |
+# Beat 1      Beat 2      Beat 3      Beat 4
+# (Kick on every downbeat = classic four-on-the-floor pattern)
+
+# ===== TRACK WIDGET CONTAINER SIZING =====
+# This defines the overall size constraints for each track widget
 <TrackWidget>:
-    size_hint_max_y: dp(75)
-    size_hint_min_y: dp(45)
+    size_hint_max_y: dp(75)                               # Maximum height in dp
+    size_hint_min_y: dp(45)                               # Minimum height in dp
 
+# SIZING EXPLANATION:
+# - size_hint_max_y: Prevents tracks from becoming too tall
+# - size_hint_min_y: Ensures tracks remain visible and usable
+# - dp() units: Density-independent pixels for consistent sizing across devices
+# - Allows responsive design while maintaining usable proportions
+# - Height range accommodates different screen sizes and orientations
 
+# LAYOUT HIERARCHY:
+# MainWidget
+# └── ScrollView
+#     └── BoxLayout (tracks_layout)
+#         ├── VerticalSpacingWidget
+#         ├── TrackWidget (Track 1 - KICK)
+#         │   ├── TrackSoundButton ("KICK")
+#         │   └── [16 × TrackStepButton] (Step pattern)
+#         ├── VerticalSpacingWidget  
+#         ├── TrackWidget (Track 2 - SNARE)
+#         │   ├── TrackSoundButton ("SNARE")
+#         │   └── [16 × TrackStepButton] (Step pattern)
+#         └── ... (additional tracks)
+
+# DESIGN PATTERNS USED:
+# 1. TEMPLATE INHERITANCE:
+#    - Custom button classes inherit from Kivy's Button
+#    - Consistent styling across all track elements
+#    - Easy to modify appearance globally
+#
+# 2. RESPONSIVE SIZING:
+#    - Uses dp() for device-independent layout
+#    - min/max constraints for usability
+#    - Adapts to different screen sizes
+#
+# 3. VISUAL FEEDBACK:
+#    - Different images for button states
+#    - Clear distinction between active/inactive steps
+#    - Professional drum machine appearance
+#
+# 4. MODULAR DESIGN:
+#    - Each track is self-contained
+#    - Consistent interface across all tracks
+#    - Easy to add/remove tracks dynamically
+
+# TECHNICAL NOTES:
+# - TrackSoundButton: Triggers immediate audio playback
+# - TrackStepButton: Programs pattern for sequenced playback  
+# - Images should be optimized for the intended button sizes
+# - Background images stretch to fit button dimensions
+# - Font rendering uses system default unless custom font specified
